@@ -45,6 +45,11 @@ namespace CurrencyExchangeApp.Repository
             return this.DB.Query<CurrencyRate>(GlobalConstants.RateProcedures.SelectByCriteria, new { Code = code });
         }
 
+        public IList<CurrencyRate> SelectAllRatesByCode(String code)
+        {
+            return this.DB.Query<CurrencyRate>(GlobalConstants.RateProcedures.SelectAllByCode, new { Code = code });
+        }
+
         public void InsertCurrency(Currency currency)
         {
             this.DB.Execute(GlobalConstants.CurrencyProcedures.Insert, currency);

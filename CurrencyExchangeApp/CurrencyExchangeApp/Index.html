@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Exchange</title>
+    <meta charset="utf-8" />
+    <link href="/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body ng-app="CurrencyExchange" ng-controller="mainPageController" ng-cloak>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-5 col-lg-offset-4 col-md-offset-4 col-sm-offset-4">
+                <h1 id="site-title"><img id="site-logo" src="/Content/images/logo.png" alt="logo" width="100px" height="90px" /> Currency Exchange</h1>
+            </div>
+        </div>
+    </div>
+    <ul class="nav nav-tabs nav-justified">
+        <li role="presentation" ng-class="{'active' : currentPage == 'currency-exchange-rate'}"><a href="#" ng-click="changePage('currency-exchange-rate')"><span class="glyphicon glyphicon-usd"></span> Currency Exchange Rate</a></li>
+        <li role="presentation" ng-class="{'active' : currentPage == 'currency-conversion'}"><a href="#" ng-click="changePage('currency-conversion')"><span class="glyphicon glyphicon-transfer"></span> Currency Conversion</a></li>
+        <li role="presentation" ng-class="{'active' : currentPage == 'currency-chart'}"><a href="#" ng-click="changePage('currency-chart')"><span class="glyphicon glyphicon-stats"></span> Currency Chart</a></li>
+    </ul>
+    <div class="row">
+        &nbsp;
+    </div>
+    <div ng-show="currentPage == 'currency-exchange-rate'">
+        <form name="currencyRateForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-lg-offset-4 col-md-offset-4 col-sm-offset-4">
+                    <label for="currency">Choose the currency</label>
+                    <div class="input-group">
+                        <select class="form-control" ng-model="selectedCur" id="currency" required>
+                            <option ng-repeat="cur in currencylist">{{cur.Title}}</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" title="Clear Input" ng-click="selectedCur = ''; currencyRateResult = null;" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                            <button class="btn btn-primary" title="Get Rate" ng-disabled="!currencyRateForm.$valid" ng-click="getRate()" type="button"><span class="glyphicon glyphicon-usd"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                &nbsp;
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-lg-offset-4 col-md-offset-4 col-sm-offset-4" ng-show="currencyRateResult">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Result</h3>
+                        </div>
+                        <div class="panel-body">
+                            <span class="text-primary">1 USD equals {{currencyRateResult.Rate | currency : " " : 4}} {{currencyRateResult.Currency}} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div ng-show="currentPage == 'currency-conversion'">
+        <form name="currencyConversionForm">
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-lg-offset-4 col-md-offset-4 col-sm-offset-4">
+                    <label for="currency">Choose the currency</label>
+                    <div class="input-group">
+                        <select class="form-control" ng-model="conversionPair.FirstRate.CurrencyCode" required>
+                            <option ng-repeat="cur in currencylist">{{cur.Title}}</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" title="Clear Input" ng-click="conversionPair.FirstRate.CurrencyCode = null;" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <label for="currency">Choose the currency</label>
+                    <div class="input-group">
+                        <select class="form-control" ng-model="conversionPair.SecondRate.CurrencyCode" required>
+                            <option ng-repeat="cur in currencylist">{{cur.Title}}</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" title="Clear Input" ng-click="conversionPair.SecondRate.CurrencyCode = null;" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                &nbsp;
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-lg-offset-4 col-md-offset-4 col-sm-offset-4">
+                    <div class="input-group">
+                        <input type="number" placeholder="Enter the value" ng-model="conversionPair.FirstRate.Value" ng-change="firstValueChanged()" class="form-control" ng-required="!conversionPair.SecondRate.Value" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" title="Clear Input" ng-click="conversionPair.FirstRate.Value = null;" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="input-group">
+                        <input type="number" placeholder="Enter the value" ng-model="conversionPair.SecondRate.Value" ng-change="secondValueChanged()" class="form-control" ng-required="!conversionPair.FirstRate.Value" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" title="Clear Input" ng-click="conversionPair.SecondRate.Value = null;" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                &nbsp;
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-lg-offset-5 col-md-offset-5 col-sm-offset-5">
+                    <div class="btn-group btn-group-justified">
+                        <button class="btn btn-primary" ng-disabled="!currencyConversionForm.$valid" ng-click="convert()" type="button" style="width:100%;"><span class="glyphicon glyphicon-transfer"></span> Convert</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div ng-show="currentPage == 'currency-chart'">
+        <form name="currencyChart">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-lg-offset-4 col-md-offset-4 col-sm-offset-4">
+                    <label for="currency">Choose the currency</label>
+                    <div class="input-group">
+                        <select class="form-control" ng-model="chartCur" id="currency" required>
+                            <option ng-repeat="cur in currencylist">{{cur.Title}}</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" title="Clear Input" ng-click="chartCur = ''; chartData = null;" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                            <button class="btn btn-primary" title="Display Chart" ng-click="displayChart()" ng-disabled="!currencyChart.$valid" type="button"><span class="glyphicon glyphicon-stats"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                &nbsp;
+            </div>
+            <div class="row" ng-show="chartData">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
+                    <canvas id="line" class="chart chart-line" chart-data="chartData.data"
+                            chart-labels="chartData.labels" chart-series="chartData.series" chart-options="chartData.options"
+                            chart-dataset-override="chartData.datasetOverride"></canvas>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/Content/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/Content/js/angular.min.js"></script>
+    <script src="/Content/js/Chart.min.js"></script>
+    <script src="/Content/js/angular-chart.min.js"></script>
+    <script src="/Content/js/siteModule.js"></script>
+    <script src="/Content/js/controllers.js"></script>
+</body>
+</html>

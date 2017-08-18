@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     Fri, Aug, 18, 2017 5:50:34 PM                */
+/* Created on:     Sat, Aug, 19, 2017 1:45:23 AM                */
 /*==============================================================*/
 
 
@@ -16,6 +16,13 @@ if exists (select 1
           where  id = object_id('USP_CURRENCYRATE_INSERTMANY')
           and type in ('P','PC'))
    drop procedure USP_CURRENCYRATE_INSERTMANY
+go
+
+if exists (select 1
+          from sysobjects
+          where  id = object_id('USP_CURRENCYRATE_SELECTALLBYCODE')
+          and type in ('P','PC'))
+   drop procedure USP_CURRENCYRATE_SELECTALLBYCODE
 go
 
 if exists (select 1
@@ -183,6 +190,25 @@ BEGIN
 		[DATE],
 		[CURRENCYCODE]
 	FROM @rates
+END
+go
+
+
+create procedure USP_CURRENCYRATE_SELECTALLBYCODE
+(
+	@Code nvarchar(20)
+)
+AS
+BEGIN
+	SELECT
+		CR.[Rate],
+		CR.[Date],
+		CR.[CurrencyCode]
+	FROM
+		[dbo].[CURRENCYRATE] CR
+	WHERE 
+		CR.[CurrencyCode] = @Code
+	ORDER BY CR.[DATE] ASC
 END
 go
 

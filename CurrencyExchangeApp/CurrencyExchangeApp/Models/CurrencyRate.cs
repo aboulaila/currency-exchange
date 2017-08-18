@@ -20,5 +20,6 @@ namespace CurrencyExchangeApp.Models
         public Decimal Rate { get; set; }
         public DateTime Date { get; set; }
         public String CurrencyCode { get; set; }
+        public Decimal Value { get; set; }
     }
 }
