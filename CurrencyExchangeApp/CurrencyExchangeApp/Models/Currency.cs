@@ -7,14 +7,13 @@ namespace CurrencyExchangeApp.Models
 {
     public class Currency
     {
-        public Currency(String code, String rate, String time)
+        public String Code { get; set; }
+        public String Title { get; set; }
+
+        public Currency(String code, String title)
         {
             this.Code = code;
-            this.Rate = Convert.ToDecimal(rate);
-            this.Time = Convert.ToDateTime(time);
+            this.Title = title;
         }
-        public String Code { get; set; }
-        public Decimal Rate { get; set; }
-        public DateTimeOffset Time { get; set; }
     }
 }

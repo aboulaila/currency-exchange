@@ -13,13 +13,13 @@ namespace CurrencyExchangeApp.Business
     public class SyncManager
     {
         #region Properties
-        Lazy<CurrencyRepository> _currencyRepository; 
+        private Lazy<CurrencyRepository> _currencyRepository; 
         #endregion
 
         #region Ctor
         public SyncManager()
         {
-            _currencyRepository = new Lazy<CurrencyRepository>();
+            _currencyRepository = new Lazy<CurrencyRepository>(() => new CurrencyRepository("CurrencyDB"));
         } 
         #endregion
 
@@ -28,18 +28,32 @@ namespace CurrencyExchangeApp.Business
         {
             var currencies = await this.GetCurrencies();
 
+            if (currencies != null && currencies.Any())
+            {
+                _currencyRepository.Value.DeleteAll();
+
+                #region InsertCurrencies
+                _currencyRepository.Value.InsertManyCurrencies(currencies.Keys.Select(k => new Currency(k.ToString().ToLower(), k.ToString())));
+                #endregion
+
+                #region InsertRates
+                foreach (var key in currencies.Keys)
+                {
+                    _currencyRepository.Value.InsertManyRates(currencies[key]);
+                }
+                #endregion
+            }
             return true;
         }
         #endregion
 
-
         #region Private Methods
-        private async Task<Dictionary<String, List<Currency>>> GetCurrencies()
+        private async Task<Dictionary<String, List<CurrencyRate>>> GetCurrencies()
         {
             String dataProviderUri = ConfigurationManager.AppSettings.Get("DataProvider");
             XNamespace xmlNamespace = ConfigurationManager.AppSettings.Get("XMLNamespace");
 
-            Dictionary<String, List<Currency>> currencies = new Dictionary<String, List<Currency>>();
+            Dictionary<String, List<CurrencyRate>> currencies = new Dictionary<String, List<CurrencyRate>>();
 
             XDocument xmlDoc = await this.GetXMLDocument(dataProviderUri);
 
@@ -53,13 +67,13 @@ namespace CurrencyExchangeApp.Business
 
                     if (currencies.ContainsKey(c))
                     {
-                        currencies[c].Add(new Currency(c, r, t));
+                        currencies[c].Add(new CurrencyRate(c.ToLower(), r, t));
                     }
                     else
                     {
-                        currencies.Add(c, new List<Currency>()
+                        currencies.Add(c, new List<CurrencyRate>()
                         {
-                            new Currency(c, r, t)
+                            new CurrencyRate(c.ToLower(), r, t)
                         });
                     }
                 }

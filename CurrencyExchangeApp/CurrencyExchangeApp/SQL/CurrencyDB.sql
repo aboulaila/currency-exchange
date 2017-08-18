@@ -1,8 +1,36 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     Fri, Aug, 18, 2017 2:18:32 PM                */
+/* Created on:     Fri, Aug, 18, 2017 5:50:34 PM                */
 /*==============================================================*/
 
+
+if exists (select 1
+          from sysobjects
+          where  id = object_id('USP_CURRENCYRATE_INSERT')
+          and type in ('P','PC'))
+   drop procedure USP_CURRENCYRATE_INSERT
+go
+
+if exists (select 1
+          from sysobjects
+          where  id = object_id('USP_CURRENCYRATE_INSERTMANY')
+          and type in ('P','PC'))
+   drop procedure USP_CURRENCYRATE_INSERTMANY
+go
+
+if exists (select 1
+          from sysobjects
+          where  id = object_id('USP_CURRENCYRATE_SELECTBYCRITERIA')
+          and type in ('P','PC'))
+   drop procedure USP_CURRENCYRATE_SELECTBYCRITERIA
+go
+
+if exists (select 1
+          from sysobjects
+          where  id = object_id('USP_CURRENCY_DELETEALL')
+          and type in ('P','PC'))
+   drop procedure USP_CURRENCY_DELETEALL
+go
 
 if exists (select 1
           from sysobjects
@@ -16,6 +44,13 @@ if exists (select 1
           where  id = object_id('USP_CURRENCY_INSERTMANY')
           and type in ('P','PC'))
    drop procedure USP_CURRENCY_INSERTMANY
+go
+
+if exists (select 1
+          from sysobjects
+          where  id = object_id('USP_CURRENCY_SELECTALL')
+          and type in ('P','PC'))
+   drop procedure USP_CURRENCY_SELECTALL
 go
 
 if exists (select 1
@@ -49,6 +84,17 @@ if exists (select 1
 go
 
 drop type CURRENCYTABLE
+go
+
+drop type CURRENCYRATETABLE
+go
+
+create type CURRENCYRATETABLE
+   as table (
+      RATE decimal(18,4) not null,
+      DATE date not null,
+      CURRENCYCODE nvarchar(20) not null
+   )
 go
 
 create type CURRENCYTABLE
@@ -96,6 +142,79 @@ alter table CURRENCYRATE
 go
 
 
+create procedure USP_CURRENCYRATE_INSERT 
+(
+	@Rate decimal(18, 4),
+	@Date date,
+	@CurrencyCode nvarchar(20)
+)
+AS
+BEGIN
+	INSERT INTO [dbo].[CURRENCYRATE]
+	(
+		[RATE],
+		[DATE],
+		[CURRENCYCODE]
+	)
+	VALUES
+	(
+		@Rate,
+		@Date,
+		@CurrencyCode
+	)
+END
+go
+
+
+create procedure USP_CURRENCYRATE_INSERTMANY
+(
+	@rates [dbo].[CurrencyRateTable] READONLY
+)
+AS
+BEGIN
+	INSERT INTO [dbo].[CURRENCYRATE]
+	(
+		[RATE],
+		[DATE],
+		[CURRENCYCODE]
+	)
+	SELECT
+		[RATE],
+		[DATE],
+		[CURRENCYCODE]
+	FROM @rates
+END
+go
+
+
+create procedure USP_CURRENCYRATE_SELECTBYCRITERIA
+(
+	@Code nvarchar(20)
+)
+AS
+BEGIN
+	SELECT TOP 1
+		CR.[Rate],
+		CR.[Date],
+		CR.[CurrencyCode]
+	FROM
+		[dbo].[CURRENCYRATE] CR
+	WHERE 
+		CR.[CurrencyCode] = @Code
+	ORDER BY CR.[DATE] DESC
+END
+go
+
+
+create procedure USP_CURRENCY_DELETEALL
+AS
+BEGIN
+	DELETE FROM [dbo].[CurrencyRate]
+	DELETE FROM [dbo].[Currency]
+END
+go
+
+
 create procedure USP_CURRENCY_INSERT
 (
 	@Code nvarchar(20),
@@ -132,6 +251,18 @@ BEGIN
 		[Code],
 		[Title]
 	FROM @Currencies
+END
+go
+
+
+create procedure USP_CURRENCY_SELECTALL
+AS
+BEGIN
+	SELECT
+		[Code],
+		[Title]
+	FROM
+		[dbo].[CURRENCY]
 END
 go
 
