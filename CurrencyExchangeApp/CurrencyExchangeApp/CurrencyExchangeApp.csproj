@@ -153,6 +153,7 @@
     <Content Include="Content\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\bootstrap\js\npm.js" />
     <Content Include="Content\css\index.css" />
+    <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\header-photo.jpg" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\js\angular-chart.min.js" />
