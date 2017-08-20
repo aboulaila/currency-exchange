@@ -11,9 +11,9 @@
             FirstRate: {},
             SecondRate: {}
         };
-        $scope.chartData = {};
+        $scope.chartData = null;
 
-        $http.get('http://app.currency-exchange.local/api/Exchange/GetCurrencies').
+        $http.get('/api/Exchange/GetCurrencies').
         then(function (response) {
             if (response && response.data) {
                 $scope.currencylist = response.data;
@@ -22,7 +22,7 @@
     };
 
     $scope.convert = function () {
-        $http.post('http://app.currency-exchange.local/api/Exchange/ConvertCurrencies', $scope.conversionPair).
+        $http.post('/api/Exchange/ConvertCurrencies', $scope.conversionPair).
         then(function (response) {
             if (response && response.data) {
                 $scope.conversionPair = response.data;
@@ -31,7 +31,7 @@
     };
 
     $scope.getRate = function () {
-        $http.get('http://app.currency-exchange.local/api/Exchange/GetCurrencyRate?currencyCode=' + $scope.selectedCur).
+        $http.get('/api/Exchange/GetCurrencyRate?currencyCode=' + $scope.selectedCur).
         then(function (response) {
             if (response && response.data) {
                 $scope.currencyRateResult = {
@@ -43,7 +43,7 @@
     };
 
     $scope.displayChart = function () {
-        $http.get('http://app.currency-exchange.local/api/Exchange/GetChartData?currencyCode=' + $scope.chartCur).
+        $http.get('/api/Exchange/GetChartData?currencyCode=' + $scope.chartCur).
         then(function (response) {
             if (response && response.data) {
                 $scope.chartData = {
@@ -62,14 +62,20 @@
                               }
                             ]
                         }
-                    }
+                    },
+                    colors: [{
+                        fillColor: 'rgba(76, 175, 80, 0.8)',
+                        strokeColor: 'rgba(76, 175, 80, 0.8)',
+                        highlightFill: 'rgba(76, 175, 80, 0.8)',
+                        highlightStroke: 'rgba(76, 175, 80, 0.8)'
+                    }]
                 };
 
                 angular.forEach(response.data, function (d) {
                     if (d) {
                         var date = new Date(d.Date);
-                        $scope.chartData.labels.push(date.getDay() + '-' + date.getMonth() + '-' + date.getFullYear());
-                        $scope.chartData.data.push(d.Rate);
+                        $scope.chartData.labels.push(date.toDateString());
+                        $scope.chartData.data.push(d.Rate.toFixed(4));
                     }
                 });
             }

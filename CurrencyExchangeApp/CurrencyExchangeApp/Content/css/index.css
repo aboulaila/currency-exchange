@@ -1,0 +1,45 @@
+﻿.page-header {
+    border: none;
+    margin: 0;
+    background-image: url("/Content/images/header-photo.jpg");
+    background-size: cover;
+}
+
+.nav-tabs li {
+    background-color: #4CAF50;
+}
+
+.nav-tabs a {
+    background-color: #F5F5F5;
+    border: 1px solid #A9A9A9 !important;
+    border-bottom: none !important;
+    color: #4CAF50;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    color: black;
+}
+
+.dropdown-menu {
+    width: 100%;
+}
+
+    .dropdown-menu li {
+        width: 100%;
+        text-align: center;
+        height: 50px;
+        font-size: 20px;
+    }
+
+        .dropdown-menu li a {
+            height: 100%;
+            padding-top: 10px;
+        }
+
+    .dropdown-menu .active a {
+        background-color: #4CAF50;
+    }
+
+    #dropdownMenu1{
+        height: 50px;
+    }

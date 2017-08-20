@@ -64,7 +64,7 @@ namespace CurrencyExchangeApp.Business
         #region Private Methods
         private void ConvertToUSD(ref CurrencyRate rate)
         {
-            var usdRateToEUR = _currencyRepository.Value.SelectRateByCriteria("usd").FirstOrDefault();
+            var usdRateToEUR = _currencyRepository.Value.SelectRateByCriteria("usd", rate.Date).FirstOrDefault();
             if (usdRateToEUR != null)
             {
                 rate.Rate = rate.Rate / usdRateToEUR.Rate;

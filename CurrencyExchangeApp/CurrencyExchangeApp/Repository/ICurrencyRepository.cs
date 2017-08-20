@@ -10,7 +10,7 @@ namespace CurrencyExchangeApp.Repository
     public interface ICurrencyRepository
     {
         List<Currency> SelectAllCurrencies();
-        IList<CurrencyRate> SelectRateByCriteria(String code);
+        IList<CurrencyRate> SelectRateByCriteria(String code, DateTime? date);
         IList<CurrencyRate> SelectAllRatesByCode(String code);
         void InsertCurrency(Currency currency);
         void InsertManyCurrencies(IEnumerable<Currency> currencies);

@@ -33,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IncludeIisSettings>false</IncludeIisSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -151,6 +152,8 @@
     <Content Include="Content\bootstrap\js\bootstrap.js" />
     <Content Include="Content\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\bootstrap\js\npm.js" />
+    <Content Include="Content\css\index.css" />
+    <Content Include="Content\images\header-photo.jpg" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\js\angular-chart.min.js" />
     <Content Include="Content\js\Chart.min.js" />
@@ -197,6 +200,7 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Properties\PublishProfiles\currencyExchange20170820.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -206,7 +210,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\css\" />
     <Folder Include="Content\views\" />
   </ItemGroup>
   <PropertyGroup>

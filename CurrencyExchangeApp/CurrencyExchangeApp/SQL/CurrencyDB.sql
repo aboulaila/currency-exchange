@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     Sat, Aug, 19, 2017 1:45:23 AM                */
+/* Created on:     Sun, Aug, 20, 2017 7:29:40 PM                */
 /*==============================================================*/
 
 
@@ -159,12 +159,14 @@ AS
 BEGIN
 	INSERT INTO [dbo].[CURRENCYRATE]
 	(
+        [ID],
 		[RATE],
 		[DATE],
 		[CURRENCYCODE]
 	)
 	VALUES
-	(
+	(    
+		NEWID(),
 		@Rate,
 		@Date,
 		@CurrencyCode
@@ -181,13 +183,15 @@ AS
 BEGIN
 	INSERT INTO [dbo].[CURRENCYRATE]
 	(
+		[ID],
 		[RATE],
 		[DATE],
 		[CURRENCYCODE]
 	)
 	SELECT
+		NEWID(),
 		[RATE],
-		[DATE],
+		[DATE] as Date,
 		[CURRENCYCODE]
 	FROM @rates
 END
@@ -215,7 +219,8 @@ go
 
 create procedure USP_CURRENCYRATE_SELECTBYCRITERIA
 (
-	@Code nvarchar(20)
+	@Code nvarchar(20),
+	@Date date = null
 )
 AS
 BEGIN
@@ -227,6 +232,8 @@ BEGIN
 		[dbo].[CURRENCYRATE] CR
 	WHERE 
 		CR.[CurrencyCode] = @Code
+		AND
+		(@Date IS NULL OR @Date = CR.[DATE])
 	ORDER BY CR.[DATE] DESC
 END
 go

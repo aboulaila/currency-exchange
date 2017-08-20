@@ -40,9 +40,9 @@ namespace CurrencyExchangeApp.Repository
             return this.DB.Query<Currency>(GlobalConstants.CurrencyProcedures.SelectAll).ToList();
         }
 
-        public IList<CurrencyRate> SelectRateByCriteria(String code)
+        public IList<CurrencyRate> SelectRateByCriteria(String code, DateTime? date = null)
         {
-            return this.DB.Query<CurrencyRate>(GlobalConstants.RateProcedures.SelectByCriteria, new { Code = code });
+            return this.DB.Query<CurrencyRate>(GlobalConstants.RateProcedures.SelectByCriteria, new { Code = code, Date = date });
         }
 
         public IList<CurrencyRate> SelectAllRatesByCode(String code)
