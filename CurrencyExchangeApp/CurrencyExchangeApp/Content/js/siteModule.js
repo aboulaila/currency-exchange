@@ -1,0 +1,1 @@
+﻿angular.module('CurrencyExchange', ['CurrencyExchange.controllers']);
